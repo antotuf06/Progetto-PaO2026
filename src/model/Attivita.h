@@ -13,15 +13,16 @@ private:
     unsigned int id; //per salvare in json
 public:
     Attivita();
+    Attivita(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int& i);
     virtual ~Attivita();
 
     virtual bool isUrgent() const =0;
 
-    QString getTitle();
-    QString getDescr();
-    QString getCateg();
-    QDate getDate();
-    unsigned int getId();
+    QString getTitle() const;
+    QString getDescr() const;
+    QString getCateg() const;
+    QDate getDate() const;
+    unsigned int getId() const;
 
     void setTitle(const QString& newtitle);
     void setDescr(const QString& newdescr);
