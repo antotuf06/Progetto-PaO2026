@@ -1,0 +1,50 @@
+# --- Qt Creator / CMake / QMake ---
+
+# File di configurazione specifica dell'utente (percorsi locali, impostazioni editor)
+*.pro.user
+*.pro.user.*
+*.cmake.user
+*.cmake.user.*
+
+# Cartelle di Build (create da Qt Creator automaticamente)
+# Solitamente iniziano con "build-"
+build-*/
+
+# Se usi CMake direttamente
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+_deps/
+
+# --- File generati dalla compilazione ---
+
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# --- File generati da Qt (MOC, RCC, UI) ---
+
+moc_*.cpp
+mocs_compilation.cpp
+qrc_*.cpp
+ui_*.h
+qmake_qmake_all.qpc
+
+# --- Sistema operativo e vari ---
+
+.DS_Store
+Thumbs.db
+*.swp
+*~
