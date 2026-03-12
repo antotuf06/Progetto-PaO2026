@@ -14,6 +14,8 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    Appuntamento.h \
+    Impegno.h \
     Scadenza.h \
     mainwindow.h \
     Attivita.h

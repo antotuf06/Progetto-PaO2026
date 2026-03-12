@@ -1,0 +1,30 @@
+#ifndef IMPEGNO_H
+#define IMPEGNO_H
+#include "Attivita.h"
+
+
+class Impegno: public Attivita {
+private:
+    QTime start;
+    QTime finish;  //orari di inizio e fine
+
+public:
+
+    //costruttori e distruttore
+    Impegno();
+    Impegno(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int& i, const QTime& s, const QTime& f);
+    virtual ~Impegno() = default;
+
+    //metodi overridati
+    bool isUrgent() const  override;
+    QJsonObject toJson() const override;
+
+    //getter e setter
+    QTime getStart() const;
+    QTime getFinish() const;
+
+    void setStart(const QTime& newstart);
+    void setFinish(const QTime& newfinish);
+
+};
+#endif // IMPEGNO_H
