@@ -9,6 +9,7 @@
 # Cartelle di Build (create da Qt Creator automaticamente)
 # Solitamente iniziano con "build-"
 build-*/
+build/
 
 # Se usi CMake direttamente
 CMakeLists.txt.user
@@ -48,3 +49,4 @@ qmake_qmake_all.qpc
 Thumbs.db
 *.swp
 *~
+git check-ignore -v build/
