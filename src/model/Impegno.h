@@ -12,11 +12,15 @@ public:
 
     //costruttori e distruttore
     Impegno();
-    Impegno(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int& i, const QTime& s, const QTime& f);
+    Impegno(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const QTime& s, const QTime& f);
     virtual ~Impegno() = default;
 
     //metodi overridati
     bool isUrgent() const  override;
+    QString getIconPath() const override;
+    QString getType() const override;
+    QString getSummary() const override;
+    void performAction() override;
     QJsonObject toJson() const override;
 
     //getter e setter

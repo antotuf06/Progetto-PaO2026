@@ -12,7 +12,7 @@ public:
 
     //costruttori e distruttore
     Appuntamento();
-    Appuntamento(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int& i, const QString& p, const QTime& h);
+    Appuntamento(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const QString& p, const QTime& h);
     virtual ~Appuntamento() =default;
 
     //getter e setter
@@ -24,6 +24,10 @@ public:
 
     //metodi overridati
     bool isUrgent() const override;
+    QString getIconPath() const override;
+    QString getType() const override;
+    QString getSummary() const override;
+    void performAction() override;
     QJsonObject toJson() const override;
 };
 
