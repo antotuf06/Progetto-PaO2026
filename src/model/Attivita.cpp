@@ -2,7 +2,7 @@
 //big 3
 Attivita::Attivita() : title("Nuova Attività"), descr(""), categ("Generale"), date(QDate::currentDate()), id(0) {}
 
-Attivita::Attivita(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int& i) : title(t), descr(d), categ(c), date(da), id(i) {}
+Attivita::Attivita(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i) : title(t), descr(d), categ(c), date(da), id(i) {}
 
 Attivita::~Attivita(){};
 

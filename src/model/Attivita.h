@@ -37,7 +37,6 @@ public:
     void setCateg(const QString& newcateg);
     void setDate(const QDate& newdate);
 
-    virtual QJsonObject toJson() const = 0;
 };
 
 #endif // ATTIVITA_H

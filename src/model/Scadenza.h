@@ -18,7 +18,6 @@ public:
     QString getType() const override;
     QString getSummary() const override;
     void performAction() override;
-    QJsonObject toJson() const override;
 
     //getter e setter specifici
     bool isDone() const;

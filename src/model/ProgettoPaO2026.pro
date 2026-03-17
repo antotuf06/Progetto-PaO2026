@@ -9,19 +9,21 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Appuntamento.cpp \
     Attivita.cpp \
+    Scadenza.cpp \
     main.cpp \
-    mainwindow.cpp
+    #mainwindow.cpp
 
 HEADERS += \
     Appuntamento.h \
     Impegno.h \
     Scadenza.h \
-    mainwindow.h \
+    #mainwindow.h \
     Attivita.h
 
-FORMS += \
-    mainwindow.ui
+#FORMS += \
+    #mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
