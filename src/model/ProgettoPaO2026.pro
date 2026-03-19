@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     Appuntamento.cpp \
     Attivita.cpp \
+    Impegno.cpp \
     Scadenza.cpp \
     main.cpp \
     #mainwindow.cpp

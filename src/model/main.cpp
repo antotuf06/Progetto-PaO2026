@@ -2,37 +2,47 @@
 #include <QDate>
 #include <QTime>
 #include <QDebug>
-#include "Scadenza.h"
+#include "Impegno.h"
 
 int main() {
     // 1. Creazione di un appuntamento per OGGI
-    QDate domani = QDate::currentDate().addDays(1);
-    QTime ora = QTime::currentTime().addSecs(3600);
+    QDate oggi = QDate::currentDate();
+    QTime ora = QTime::currentTime().addSecs(3600); // Tra un'ora
 
-    Scadenza* scad = new Scadenza(
-        "Consegna Progetto",
-        "Consegna progetto PaO",
-        "Scadenza",
-        domani,
+    Impegno* imp = new Impegno(
+        "Riunione Progetto",
+        "Discussione architettura",
+        "Università",
+        oggi,
         1,
-        ora
+        ora,
+        ora.addSecs(3600)
         );
 
     // 2. Test dei Getter
-    qDebug() << "Titolo:" << scad->getTitle();
-    qDebug() << "Data:" << scad->getDate();
-    qDebug() << "Ora:" << scad->getHour().toString();
+    qDebug() << "Titolo:" << imp->getTitle();
+    qDebug() << "Inizio:" << imp->getStart().toString();
+    qDebug() << "Fine:" << imp->getFinish().toString();
 
     // 3. Test Polimorfismo (isUrgent)
-    if (scad->isUrgent()) {
-        qDebug() << "TEST SUPERATO: La scadenza è urgente.";
+    if (imp->isUrgent()) {
+        qDebug() << "TEST SUPERATO: L'appuntamento di oggi è urgente.";
     } else {
         qDebug() << "TEST FALLITO: Dovrebbe essere urgente.";
     }
 
     // 4. Test getSummary
-    qDebug() << "Summary:" << scad->getSummary();
+    qDebug() << "Summary:" << imp->getSummary();
 
-    delete scad;
+    imp->performAction();
+    qDebug() << "Titolo:" << imp->getTitle();
+    qDebug() << "Inizio:" << imp->getStart().toString();
+    qDebug() << "Fine:" << imp->getFinish().toString();
+
+    qDebug() << "Summary:" << imp->getSummary();
+
+
+
+    delete imp;
     return 0;
 }

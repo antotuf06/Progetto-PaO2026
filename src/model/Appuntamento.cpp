@@ -36,5 +36,6 @@ QString Appuntamento::getSummary() const  {         //restituisce un piccolo ria
 };
 
 void Appuntamento::performAction() {
-    hour=hour.addSecs(3600);
+    setHour(getHour().addSecs(3600));
+    qDebug() << "Appuntamento posticipato di un'ora";
 } ;
