@@ -26,7 +26,9 @@ bool Appuntamento::isUrgent() const {              //L'appuntamento è urgente s
     return false;
 };
 
-QString Appuntamento::getIconPath() const {};
+QString Appuntamento::getIconPath() const {
+    return ":/icons/icons/IconaAppuntamentoSVG.svg";
+};
 
 
 QString Appuntamento::getSummary() const  {         //restituisce un piccolo riassunto delle info dell'attività per facilitare la visualizzazione (es. "12/07/2027 11:30, via Roma 27")

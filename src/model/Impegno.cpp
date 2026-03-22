@@ -22,7 +22,9 @@ bool Impegno::isUrgent() const{                    //restituisce true se mancano
 };
 
 
-QString Impegno::getIconPath() const {};
+QString Impegno::getIconPath() const {
+    return ":/icons/icons/IconaImpegnoSVG.svg";
+};
 
 QString Impegno::getType() const {return "Impegno";};
 

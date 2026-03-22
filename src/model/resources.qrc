@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="icons">
+        <file>icons/IconaAppuntamentoSVG.svg</file>
+        <file>icons/IconaImpegnoSVG.svg</file>
+        <file>icons/IconaScadenzaSVG.svg</file>
+    </qresource>
+</RCC>
