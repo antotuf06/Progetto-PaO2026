@@ -18,6 +18,8 @@ bool Scadenza::isUrgent() const {           //è urgente se mancano meno di 24 o
 
 };
 
+//getter e setter
+
 QString Scadenza::getIconPath() const {
     return ":/icons/icons/IconaScadenzaSVG.svg";
 };
@@ -52,3 +54,13 @@ void Scadenza::setHour(const QTime& newhour){
     if (newhour.isNull()) return;
     hour=newhour;
 };
+
+
+//salvataggio in json
+QJsonObject Scadenza::toJson() const {
+    QJsonObject json = baseJson(); // campi comuni
+    json["tipo"] = "Scadenza";   // Identificatore
+    json["done"] = done;
+    json["ora"] = hour.toString(Qt::ISODate);
+    return json;
+}

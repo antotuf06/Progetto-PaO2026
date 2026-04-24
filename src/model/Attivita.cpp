@@ -27,7 +27,18 @@ void Attivita::setCateg(const QString& newcateg) {
     if (newcateg.isEmpty()) return;
     categ=newcateg;
 }
+
 void Attivita::setDate(const QDate& newdate) {
     if(newdate.isNull()) return;
     date=newdate;
+}
+
+QJsonObject Attivita::baseJson() const {
+    QJsonObject json;
+    json["titolo"] = title;
+    json["descrizione"] = descr;
+    json["categoria"] = categ;
+    json["data"] = date.toString(Qt::ISODate); //formato YYYY-MM-DD
+    json["id"] = static_cast<int>(id);
+    return json;
 }

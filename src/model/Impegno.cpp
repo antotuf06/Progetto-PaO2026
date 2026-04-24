@@ -37,15 +37,14 @@ QString Impegno::getSummary() const {           //ritorna stringa del tipo "data
 };
 
 
-void Impegno::performAction() {
-    // Aggiunge 30 minuti a entrambi gli orari
+void Impegno::performAction() {          // Aggiunge 30 minuti a entrambi gli orari
     setStart(getStart().addMSecs(30 * 60 * 1000));
     setFinish(getFinish().addMSecs(30 * 60 * 1000));
 
     qDebug() << "Impegno posticipato di 30 minuti.";
 }
 
-//getter
+//getter e setter
 
 QTime Impegno::getStart() const {return start;};
 
@@ -60,3 +59,13 @@ void Impegno::setFinish(const QTime& newfinish) {
     if(newfinish.isNull()) return;
     finish=newfinish;
 };
+
+
+//salvataggio in json
+QJsonObject Impegno::toJson() const{
+    QJsonObject json = baseJson(); // campi comuni
+    json["tipo"] = "Impegno";   // Identificatore
+    json["start"] = start.toString(Qt::ISODate);      //campi specifici
+    json["finish"] = finish.toString(Qt::ISODate);
+    return json;
+}

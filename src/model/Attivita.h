@@ -4,6 +4,10 @@
 #include <QDate>
 #include <QTime>
 #include <iostream>
+#include <QJsonObject>
+
+
+
 class Attivita {
 private:
     QString title;
@@ -37,6 +41,8 @@ public:
     void setCateg(const QString& newcateg);
     void setDate(const QDate& newdate);
 
+
+    QJsonObject baseJson() const;
 };
 
 #endif // ATTIVITA_H

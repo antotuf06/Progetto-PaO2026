@@ -28,6 +28,9 @@ public:
     QString getType() const override;
     QString getSummary() const override;
     void performAction() override;
+
+    //salvataggio json
+    QJsonObject toJson() const;
 };
 
 #endif // APPUNTAMENTO_H

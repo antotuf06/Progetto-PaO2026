@@ -24,6 +24,9 @@ public:
     void setDone(bool status);
     QTime getHour() const;
     void setHour(const QTime& newhour);
+
+    //salvataggio in json
+    QJsonObject toJson() const;
 };
 
 #endif // SCADENZA_H

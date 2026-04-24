@@ -29,5 +29,8 @@ public:
     void setStart(const QTime& newstart);
     void setFinish(const QTime& newfinish);
 
+    //salvataggio in json
+    QJsonObject toJson() const;
+
 };
 #endif // IMPEGNO_H

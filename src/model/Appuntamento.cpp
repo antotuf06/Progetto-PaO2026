@@ -41,3 +41,11 @@ void Appuntamento::performAction() {
     setHour(getHour().addSecs(3600));
     qDebug() << "Appuntamento posticipato di un'ora";
 } ;
+
+QJsonObject Appuntamento::toJson() const {
+    QJsonObject json = baseJson(); // campi comuni
+    json["tipo"] = "Appuntamento";   // tipo attività
+    json["luogo"] = place;           // dati specifici
+    json["ora"] = hour.toString(Qt::ISODate);
+    return json;
+}
