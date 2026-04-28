@@ -19,6 +19,7 @@ SOURCES += \
 HEADERS += \
     Appuntamento.h \
     Impegno.h \
+    Manager.h \
     Scadenza.h \
     #mainwindow.h \
     Attivita.h
