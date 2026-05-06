@@ -3,7 +3,7 @@
 
 //costruttori
 Impegno::Impegno() : Attivita::Attivita(), start(QTime::currentTime()), finish(QTime::currentTime().addSecs(3600)) {};
-Impegno::Impegno(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const QTime& s, const QTime& f) : Attivita::Attivita(t, d, c, da, i), start(s), finish(f) {};
+Impegno::Impegno(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const periodicityTipe& per, const QDate& end, const QTime& s, const QTime& f) : Attivita::Attivita(t, d, c, da, i, per, end), start(s), finish(f) {};
 
 
 
@@ -60,6 +60,20 @@ void Impegno::setFinish(const QTime& newfinish) {
     finish=newfinish;
 };
 
+Attivita* Impegno::clone() const {
+    return new Impegno(*this);
+}
+
+QDate Impegno::calcolaProssimaData() const {
+    if (getPeriodicity() == Nessuna) return QDate(); // Data non valida
+
+    QDate nuovaData = getDate();
+    if (getPeriodicity() == Giornaliera) return nuovaData.addDays(1);
+    if (getPeriodicity() == Settimanale) return nuovaData.addDays(7);
+    if (getPeriodicity() == Mensile) return nuovaData.addMonths(1);
+
+    return QDate();
+}
 
 //salvataggio in json
 QJsonObject Impegno::toJson() const{

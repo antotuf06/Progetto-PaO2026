@@ -1,97 +1,96 @@
-#include <iostream>
-#include <QFile>
+#include <QCoreApplication>
+#include <QDebug>
 #include <QDate>
 #include <QTime>
-#include <QDebug>
-#include <vector>
+#include <QVector>
 
-#include "Scadenza.h"
+// Includi i tuoi file (assicurati che i nomi coincidano)
 #include "Appuntamento.h"
 #include "Impegno.h"
+#include "Scadenza.h"
 
-void testAttivita(Attivita* a) {
-    qDebug() << "\n--- TEST CLASSE:" << a->getType() << "---";
+// --- FUNZIONE DI SUPPORTO (Simula il Manager) ---
+// Questa è la logica che in futuro sposterai in Manager::aggiungiConRicorrenza
+void generaRicorrenze(QVector<Attivita*>& lista, Attivita* primo) {
+    // 1. Aggiungiamo il primo elemento
+    lista.append(primo);
 
-    // 1. Test Costruttore e Restituzione dati iniziali
-    qDebug() << "[Dati Iniziali]";
-    qDebug() << "ID:" << a->getId();
-    qDebug() << "Titolo:" << a->getTitle();
-    qDebug() << "Descrizione:" << a->getDescr();
-    qDebug() << "Categoria:" << a->getCateg();
-    qDebug() << "Data:" << a->getDate().toString("dd/MM/yyyy");
+    // 2. Generiamo le copie se l'attività è ricorrente e ha una scadenza
+    if (primo->getPeriodicity() != Nessuna && primo->getEndPeriod().isValid()) {
+        QDate prossima = primo->calcolaProssimaData();
+        Attivita* ultimoCreato = primo;
 
-    // 2. Test getIconPath
-    QString path = a->getIconPath();
-    if (QFile::exists(path)) {
-        qDebug() << "Icona trovata:" << path;
-    } else {
-        qDebug() << "Errore: Icona NON trovata in:" << path;
+        while (prossima.isValid() && prossima <= primo->getEndPeriod()) {
+            Attivita* copia = ultimoCreato->clone();
+            copia->setDate(prossima);
+
+            lista.append(copia);
+
+            ultimoCreato = copia;
+            prossima = ultimoCreato->calcolaProssimaData();
+        }
     }
-
-    // 3. Test getSummary
-    qDebug() << "Summary pre-azione:" << a->getSummary();
-
-    // 4. Test performAction
-    qDebug() << "Eseguo performAction()...";
-    a->performAction();
-
-    // 5. Restituzione dati dopo la modifica
-    qDebug() << "[Dati Post-Modifica]";
-    qDebug() << "Summary post-azione:" << a->getSummary();
-
-    // Verifica specifica per Scadenza (se è stata segnata come 'done')
-    Scadenza* s = dynamic_cast<Scadenza*>(a);
-    if (s) {
-        qDebug() << "Stato completamento:" << (s->isDone() ? "FATTO" : "DA FARE");
-    }
-
-    qDebug() << "---------------------------------------";
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    QCoreApplication a(argc, argv);
+
+    qDebug() << "--- INIZIO TEST POLIMORFISMO E RICORRENZE ---";
+
+    // Questo vettore sostituisce temporaneamente il Manager
+    QVector<Attivita*> listaAttivita;
+
+    // Date di test
     QDate oggi = QDate::currentDate();
-    QTime ora = QTime::currentTime();
+    QDate fineMese = oggi.addMonths(1);
+    QDate fraTreGiorni = oggi.addDays(2);
 
-    // Creazione istanze delle tre classi derivate
-    Scadenza* scadenza = new Scadenza(
-        "Comprare latte",
-        "Prendere quello intero",
-        "Spesa",
-        oggi,
-        101,
-        QTime(20, 0),
-        false
-        );
+    // --- TEST 1: SCADENZA (Non ricorrente) ---
+    qDebug() << "\nCreazione Scadenza (Singola)...";
+    // N.B: Sostituisci il numero 1 con l'enum della tua Priority se necessario
+    Scadenza* bolletta = new Scadenza("Bolletta Luce", "Pagamento bimestrale",
+                                      "Utenze", oggi, 1, false);
+    generaRicorrenze(listaAttivita, bolletta);
 
-    Appuntamento* appuntamento = new Appuntamento(
-        "Dentista",
-        "Pulizia annuale",
-        "Salute",
-        oggi.addDays(1),
-        102,
-        "Via Roma 15",
-        QTime(15, 30)
-        );
 
-    Impegno* impegno = new Impegno(
-        "Studio PAO",
-        "Preparazione test main",
-        "Università",
-        oggi,
-        103,
-        ora,
-        ora.addSecs(3600)
-        );
+    // --- TEST 2: APPUNTAMENTO (Settimanale) ---
+    qDebug() << "Creazione Appuntamento (Settimanale fino a fine mese)...";
+    Appuntamento* calcetto = new Appuntamento("Partita Calcetto", "Solito gruppo",
+                                              "Sport", oggi, 2,
+                                              "Campetti", QTime(19, 0),
+                                              Settimanale, fineMese);
+    generaRicorrenze(listaAttivita, calcetto);
 
-    // Esecuzione dei test tramite polimorfismo
-    testAttivita(scadenza);
-    testAttivita(appuntamento);
-    testAttivita(impegno);
 
-    // Pulizia
-    delete scadenza;
-    delete appuntamento;
-    delete impegno;
+    // --- TEST 3: IMPEGNO (Giornaliero) ---
+    qDebug() << "Creazione Impegno (Giornaliero per 3 giorni)...";
+    Impegno* medicina = new Impegno("Prendere Antibiotico", "Dopo i pasti",
+                                    "Salute", oggi, 3,
+                                    QTime(8, 0), QTime(8, 5),
+                                    Giornaliera, fraTreGiorni);
+    generaRicorrenze(listaAttivita, medicina);
+
+
+    // --- STAMPA DEI RISULTATI ---
+    qDebug() << "\n--- LISTA COMPLETA DELLE ATTIVITA' ---";
+    qDebug() << "Totale oggetti in memoria:" << listaAttivita.size();
+
+    for (int i = 0; i < listaAttivita.size(); ++i) {
+        Attivita* att = listaAttivita[i];
+
+        // Verifica con i getter effettivi che hai definito in Attivita
+        qDebug() << "ID:" << i
+                 << "| Data:" << att->getDate().toString("dd/MM/yyyy")
+                 << "| Titolo:" << att->getTitle();
+    }
+
+    // --- PULIZIA DELLA MEMORIA ---
+    // Dato che non c'è il distruttore del Manager, dobbiamo liberare la RAM a mano qui
+    qDebug() << "\nPulizia memoria in corso...";
+    qDeleteAll(listaAttivita);
+    listaAttivita.clear();
+
+    qDebug() << "Test completato.";
 
     return 0;
 }

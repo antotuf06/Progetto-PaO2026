@@ -2,7 +2,7 @@
 
 //coatruttori
 Appuntamento::Appuntamento() : Attivita::Attivita(), place(""), hour(QTime::currentTime()) {};
-Appuntamento::Appuntamento(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const QString& p, const QTime& h): Attivita::Attivita(t, d, c, da, i), place(p), hour(h) {};
+Appuntamento::Appuntamento(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const periodicityTipe& per, const QDate& end, const QString& p, const QTime& h): Attivita::Attivita(t, d, c, da, i, per, end), place(p), hour(h) {};
 
 //getter e setter
 QTime Appuntamento::getHour() const {return hour;}
@@ -40,7 +40,22 @@ QString Appuntamento::getSummary() const  {         //restituisce un piccolo ria
 void Appuntamento::performAction() {
     setHour(getHour().addSecs(3600));
     qDebug() << "Appuntamento posticipato di un'ora";
-} ;
+};
+
+Attivita* Appuntamento::clone() const {
+    return new Appuntamento(*this);
+}
+
+QDate Appuntamento::calcolaProssimaData() const {
+    if (getPeriodicity() == Nessuna) return QDate();
+
+    QDate nuovaData = getDate();
+    if (getPeriodicity() == Giornaliera) return nuovaData.addDays(1);
+    if (getPeriodicity() == Settimanale) return nuovaData.addDays(7);
+    if (getPeriodicity() == Mensile) return nuovaData.addMonths(1);
+
+    return QDate();
+}
 
 QJsonObject Appuntamento::toJson() const {
     QJsonObject json = baseJson(); // campi comuni

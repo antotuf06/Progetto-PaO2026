@@ -12,8 +12,9 @@ public:
 
     //costruttori e distruttore
     Appuntamento();
-    Appuntamento(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const QString& p, const QTime& h);
+    Appuntamento(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const periodicityTipe& per, const QDate& end, const QString& p, const QTime& h);
     virtual ~Appuntamento() =default;
+    Attivita* clone() const override;
 
     //getter e setter
     QString getPlace() const;
@@ -28,6 +29,7 @@ public:
     QString getType() const override;
     QString getSummary() const override;
     void performAction() override;
+    QDate calcolaProssimaData() const override;
 
     //salvataggio json
     QJsonObject toJson() const;

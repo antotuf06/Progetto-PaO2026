@@ -14,18 +14,19 @@ SOURCES += \
     Impegno.cpp \
     Scadenza.cpp \
     main.cpp \
-    #mainwindow.cpp
+    mainwindow.cpp
 
 HEADERS += \
     Appuntamento.h \
     Impegno.h \
     Manager.h \
     Scadenza.h \
-    #mainwindow.h \
+    mainwindow.h \
     Attivita.h
 
-#FORMS += \
-    #mainwindow.ui
+FORMS += \
+    mainwindow.ui \
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -2,7 +2,7 @@
 
 //costruttori
 Scadenza::Scadenza(): Attivita::Attivita(), done(false), hour(QTime::currentTime()) {};
-Scadenza::Scadenza(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const QTime& h,bool f) : Attivita::Attivita(t, d, c, da, i), done(f), hour(h) {};
+Scadenza::Scadenza(const QString& t, const QString& d, const QString& c, const QDate& da, unsigned int i, const periodicityTipe& per, const QDate& end, const QTime& h,bool f) : Attivita::Attivita(t, d, c, da, i, per, end), done(f), hour(h) {};
 
 //metodi overridati
 bool Scadenza::isUrgent() const {           //è urgente se mancano meno di 24 ore o se la scadenza è già passata
@@ -55,6 +55,13 @@ void Scadenza::setHour(const QTime& newhour){
     hour=newhour;
 };
 
+Attivita* Scadenza::clone() const {
+    return new Scadenza(*this);
+}
+
+QDate Scadenza::calcolaProssimaData() const {  //restituisce un QDate nullo, per evidenziare che non c'è ricorrenza per le scadenze
+    return QDate();
+}
 
 //salvataggio in json
 QJsonObject Scadenza::toJson() const {
