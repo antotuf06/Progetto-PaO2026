@@ -28,7 +28,7 @@ public:
     void setHour(const QTime& newhour);
 
     //salvataggio in json
-    QJsonObject toJson() const;
+    QJsonObject toJson() const override;
 };
 
 #endif // SCADENZA_H

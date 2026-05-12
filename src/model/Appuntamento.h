@@ -32,7 +32,7 @@ public:
     QDate calcolaProssimaData() const override;
 
     //salvataggio json
-    QJsonObject toJson() const;
+    QJsonObject toJson() const override;
 };
 
 #endif // APPUNTAMENTO_H

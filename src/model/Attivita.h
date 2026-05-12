@@ -52,6 +52,8 @@ class Attivita {
 
 
         QJsonObject baseJson() const;
+        virtual QJsonObject toJson() const = 0;
+
 };
 
 #endif // ATTIVITA_H

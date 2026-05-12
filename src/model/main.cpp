@@ -2,95 +2,85 @@
 #include <QDebug>
 #include <QDate>
 #include <QTime>
-#include <QVector>
+#include <QDir>
+#include <QFileInfo>
 
-// Includi i tuoi file (assicurati che i nomi coincidano)
+// Includiamo il Manager e le classi derivate
+#include "Manager.h"
 #include "Appuntamento.h"
 #include "Impegno.h"
 #include "Scadenza.h"
 
-// --- FUNZIONE DI SUPPORTO (Simula il Manager) ---
-// Questa è la logica che in futuro sposterai in Manager::aggiungiConRicorrenza
-void generaRicorrenze(QVector<Attivita*>& lista, Attivita* primo) {
-    // 1. Aggiungiamo il primo elemento
-    lista.append(primo);
-
-    // 2. Generiamo le copie se l'attività è ricorrente e ha una scadenza
-    if (primo->getPeriodicity() != Nessuna && primo->getEndPeriod().isValid()) {
-        QDate prossima = primo->calcolaProssimaData();
-        Attivita* ultimoCreato = primo;
-
-        while (prossima.isValid() && prossima <= primo->getEndPeriod()) {
-            Attivita* copia = ultimoCreato->clone();
-            copia->setDate(prossima);
-
-            lista.append(copia);
-
-            ultimoCreato = copia;
-            prossima = ultimoCreato->calcolaProssimaData();
-        }
-    }
-}
-
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
-    qDebug() << "--- INIZIO TEST POLIMORFISMO E RICORRENZE ---";
+    // Diamo un nome a un file di test per non sporcare il database reale
+    QString fileTest = "test_database.json";
+    qDebug() << "-> La cartella di lavoro attuale è:" << QDir::currentPath();
+    qDebug() << "-> Il percorso esatto del file sarà:" << QFileInfo(fileTest).absoluteFilePath();
 
-    // Questo vettore sostituisce temporaneamente il Manager
-    QVector<Attivita*> listaAttivita;
+    qDebug() << "=========================================";
+    qDebug() << "  FASE 1: CREAZIONE E SALVATAGGIO";
+    qDebug() << "=========================================";
 
-    // Date di test
+    // Creiamo il primo manager che simula l'utente che inserisce i dati
+    Manager managerScrittura(fileTest);
+    managerScrittura.clear(); // Partiamo da una situazione pulita
+
     QDate oggi = QDate::currentDate();
     QDate fineMese = oggi.addMonths(1);
     QDate fraTreGiorni = oggi.addDays(2);
 
-    // --- TEST 1: SCADENZA (Non ricorrente) ---
-    qDebug() << "\nCreazione Scadenza (Singola)...";
-    // N.B: Sostituisci il numero 1 con l'enum della tua Priority se necessario
-    Scadenza* bolletta = new Scadenza("Bolletta Luce", "Pagamento bimestrale",
-                                      "Utenze", oggi, 1, false);
-    generaRicorrenze(listaAttivita, bolletta);
+    // 1. Scadenza (Singola)
+    Scadenza* bolletta = new Scadenza(
+        "Bolletta Luce", "Scadenza", "Utenze", oggi, 1, Nessuna, QDate(), QTime(12, 0), false
+        );
+    managerScrittura.addPeriodicity(bolletta);
+
+    // 2. Appuntamento (Settimanale)
+    Appuntamento* calcetto = new Appuntamento(
+        "Partita Calcetto", "Solito gruppo", "Sport", oggi, 2, Settimanale, fineMese, "Campetti", QTime(19, 0)
+        );
+    managerScrittura.addPeriodicity(calcetto);
+
+    // 3. Impegno (Giornaliero)
+    Impegno* medicina = new Impegno(
+        "Antibiotico", "Dopo i pasti", "Salute", oggi, 3, Giornaliera, fraTreGiorni, QTime(8, 0), QTime(8, 5)
+        );
+    managerScrittura.addPeriodicity(medicina);
+
+    qDebug() << "-> Inserite attività iniziali.";
+    qDebug() << "-> Totale oggetti in memoria dopo la generazione delle ricorrenze:" << managerScrittura.getSize();
+
+    // Il salvataggio avviene in automatico dentro aggiungiConRicorrenza(),
+    // ma lo richiamiamo per sicurezza.
+    managerScrittura.salvaFile();
+    qDebug() << "-> Dati salvati in" << fileTest << "\n";
 
 
-    // --- TEST 2: APPUNTAMENTO (Settimanale) ---
-    qDebug() << "Creazione Appuntamento (Settimanale fino a fine mese)...";
-    Appuntamento* calcetto = new Appuntamento("Partita Calcetto", "Solito gruppo",
-                                              "Sport", oggi, 2,
-                                              "Campetti", QTime(19, 0),
-                                              Settimanale, fineMese);
-    generaRicorrenze(listaAttivita, calcetto);
 
+    qDebug() << "=========================================";
+    qDebug() << "  FASE 2: RICARICAMENTO DAL FILE JSON";
+    qDebug() << "=========================================";
 
-    // --- TEST 3: IMPEGNO (Giornaliero) ---
-    qDebug() << "Creazione Impegno (Giornaliero per 3 giorni)...";
-    Impegno* medicina = new Impegno("Prendere Antibiotico", "Dopo i pasti",
-                                    "Salute", oggi, 3,
-                                    QTime(8, 0), QTime(8, 5),
-                                    Giornaliera, fraTreGiorni);
-    generaRicorrenze(listaAttivita, medicina);
+    // Creiamo un SECONDO manager totalmente slegato dal primo.
+    // Questo simula l'utente che ha chiuso e riaperto l'applicazione.
+    Manager managerLettura(fileTest);
+    managerLettura.caricaFile();
 
+    qDebug() << "-> Oggetti ricaricati con successo:" << managerLettura.getSize();
 
-    // --- STAMPA DEI RISULTATI ---
-    qDebug() << "\n--- LISTA COMPLETA DELLE ATTIVITA' ---";
-    qDebug() << "Totale oggetti in memoria:" << listaAttivita.size();
+    // Verifichiamo se il polimorfismo e i dati si sono conservati
+    for (int i = 0; i < managerLettura.getSize(); ++i) {
+        Attivita* att = managerLettura.getAttivita(i);
 
-    for (int i = 0; i < listaAttivita.size(); ++i) {
-        Attivita* att = listaAttivita[i];
-
-        // Verifica con i getter effettivi che hai definito in Attivita
-        qDebug() << "ID:" << i
-                 << "| Data:" << att->getDate().toString("dd/MM/yyyy")
-                 << "| Titolo:" << att->getTitle();
+        qDebug().noquote() << "\n[" << att->getType() << "]" << att->getDate().toString("dd/MM/yyyy") << "-" << att->getTitle();
+        qDebug().noquote() << "   Dettagli:" << att->getSummary();
     }
 
-    // --- PULIZIA DELLA MEMORIA ---
-    // Dato che non c'è il distruttore del Manager, dobbiamo liberare la RAM a mano qui
-    qDebug() << "\nPulizia memoria in corso...";
-    qDeleteAll(listaAttivita);
-    listaAttivita.clear();
-
-    qDebug() << "Test completato.";
+    qDebug() << "\n=========================================";
+    qDebug() << "  TEST COMPLETATO";
+    qDebug() << "=========================================";
 
     return 0;
 }

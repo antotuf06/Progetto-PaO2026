@@ -11,30 +11,45 @@ private:
     QString fileName;
 
 public:
-    // Costruttore: riceve il percorso del file JSON
-    Manager(const QString& file = "database.json");
+    // explicit per evitare conversioni implicite da QString a Manager
+    explicit Manager(const QString& file = "database.json");
 
-    // Distruttore: per evitare memory leaks
     ~Manager();
 
 
+    //add o remove dal vettore
+    // aggiunge un'attività
     void addAttivita(Attivita* a);
 
-    // Rimuove l'attività all'indice specificato
+    // aggiunge un'attività e le sue ricorrenze
+    void addPeriodicity(Attivita* primo);
+
+    // rimuove l'attività all'indice specificato
     void removeAttivita(int index);
 
-    // Permette di modificare un'attività esistente, che viene sostituita con una nuova attività ma con i dati modificati
+    // sostituisce un'attività all'indice dato con una modificata
     void updateAttivita(int index, Attivita* nuova);
 
-    // Ritorna la lista per visualizzazione nella GUI
+    // svuota completamente la lista
+    void clear();
+
+
+    //getter
+    // ritorna una reference alla lista completa (solo lettura)
     const QVector<Attivita*>& getLista() const;
 
-    // Ritorna il numero di attività presenti
+    // restituisce una singola attività
+    Attivita* getAttivita(int index) const;
+
+    // ritorna il numero di attività presenti
     int getSize() const;
 
 
-    //Metodi per la persistenza
+    //persistenza
+    // salva il vettore attuale nel file specificato dal costruttore
     void salvaFile() const;
+
+    // carica dal file JSON e popola il vettore
     void caricaFile();
 };
 

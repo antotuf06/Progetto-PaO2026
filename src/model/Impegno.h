@@ -32,7 +32,7 @@ public:
     void setFinish(const QTime& newfinish);
 
     //salvataggio in json
-    QJsonObject toJson() const;
+    QJsonObject toJson() const override;
 
 };
 #endif // IMPEGNO_H

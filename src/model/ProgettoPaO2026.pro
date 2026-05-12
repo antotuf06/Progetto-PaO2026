@@ -12,6 +12,7 @@ SOURCES += \
     Appuntamento.cpp \
     Attivita.cpp \
     Impegno.cpp \
+    Manager.cpp \
     Scadenza.cpp \
     main.cpp \
     mainwindow.cpp
