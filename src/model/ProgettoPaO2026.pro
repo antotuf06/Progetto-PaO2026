@@ -26,6 +26,7 @@ HEADERS += \
     Attivita.h
 
 FORMS += \
+    formScadenza.ui \
     mainwindow.ui
 
 
@@ -36,3 +37,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+DISTFILES += \
+    icons/IconaAppuntamentoSVG.svg \
+    icons/IconaHomeSVG.svg \
+    icons/IconaImpegnoSVG.svg \
+    icons/IconaImportaSVG.svg \
+    icons/IconaSalvaSVG.svg \
+    icons/IconaScadenzaSVG.svg \
+    icons/IconaUrgenteSVG.svg

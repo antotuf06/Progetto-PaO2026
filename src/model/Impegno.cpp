@@ -32,7 +32,7 @@ QString Impegno::getSummary() const {           //ritorna stringa del tipo "data
     QDateTime inizio(getDate(), getStart());
     QTime fine = getFinish();
     QString show1 = inizio.toString("dd/MM/yyyy hh:mm");
-    QString show2 = fine. toString("hh:mm");
+    QString show2 = fine.toString("hh:mm");
     return  show1+"-"+show2 ;
 };
 
