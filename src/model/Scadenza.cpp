@@ -28,10 +28,14 @@ QString Scadenza::getType() const {
     return "Scadenza";
 };
 
-QString Scadenza::getSummary() const {     //restituisce "Finire entro: data ora"
-    QDateTime istante(getDate(), getHour());
-    QString show = istante.toString("dd/MM/yyyy hh:mm");
-    return "Finire entro: "+show;
+QString Scadenza::getSummary() const {     //restituisce "Finire entro: data ora" o "Attività completata"
+    if(!done){
+        QDateTime istante(getDate(), getHour());
+        QString show = istante.toString("dd/MM/yyyy hh:mm");
+        return "Finire entro: "+show;
+    } else {
+        return "Attività completata";
+    }
 };
 void Scadenza::performAction() {      //inverte lo stato della scadenza (fatto o non fatto)
     done=!done;

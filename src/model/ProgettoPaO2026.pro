@@ -14,6 +14,7 @@ SOURCES += \
     Impegno.cpp \
     Manager.cpp \
     Scadenza.cpp \
+    formscadenza.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -22,11 +23,12 @@ HEADERS += \
     Impegno.h \
     Manager.h \
     Scadenza.h \
+    formscadenza.h \
     mainwindow.h \
     Attivita.h
 
 FORMS += \
-    formScadenza.ui \
+    formscadenza.ui \
     mainwindow.ui
 
 
