@@ -113,8 +113,8 @@ QPushButton:pressed {
             <string>Home</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>icons/IconaHomeSVG.svg</normaloff>icons/IconaHomeSVG.svg</iconset>
+            <iconset resource="resources.qrc">
+             <normaloff>:/icons/IconaHomeSVG.svg</normaloff>:/icons/IconaHomeSVG.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -179,8 +179,8 @@ QPushButton:pressed {
             <string>Impegno</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>icons/IconaImpegnoSVG.svg</normaloff>icons/IconaImpegnoSVG.svg</iconset>
+            <iconset resource="resources.qrc">
+             <normaloff>:/icons/IconaImpegnoSVG.svg</normaloff>:/icons/IconaImpegnoSVG.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -226,8 +226,8 @@ QPushButton:pressed {
             <string>Appuntamento</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>icons/IconaAppuntamentoSVG.svg</normaloff>icons/IconaAppuntamentoSVG.svg</iconset>
+            <iconset resource="resources.qrc">
+             <normaloff>:/icons/IconaAppuntamentoSVG.svg</normaloff>:/icons/IconaAppuntamentoSVG.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -273,8 +273,8 @@ QPushButton:pressed {
             <string>Scadenza</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>icons/IconaScadenzaSVG.svg</normaloff>icons/IconaScadenzaSVG.svg</iconset>
+            <iconset resource="resources.qrc">
+             <normaloff>:/icons/IconaScadenzaSVG.svg</normaloff>:/icons/IconaScadenzaSVG.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -320,8 +320,8 @@ QPushButton:pressed {
             <string>Urgente</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>icons/IconaUrgenteSVG.svg</normaloff>icons/IconaUrgenteSVG.svg</iconset>
+            <iconset resource="resources.qrc">
+             <normaloff>:/icons/IconaUrgenteSVG.svg</normaloff>:/icons/IconaUrgenteSVG.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -542,16 +542,34 @@ QScrollArea {
             </property>
            </spacer>
           </item>
-          <item>
+          <item alignment="Qt::AlignmentFlag::AlignHCenter">
            <widget class="QLabel" name="icona">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
             <property name="text">
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap>../../../Users/anton/Downloads/content_paste_search_54dp_5F5F5F_FILL0_wght300_GRAD0_opsz48.svg</pixmap>
+             <pixmap resource="resources.qrc">:/icons/IconaSelezioneSVG.svg</pixmap>
             </property>
             <property name="scaledContents">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -971,8 +989,8 @@ QPushButton:pressed {
          <string>Importa</string>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>icons/IconaImportaSVG.svg</normaloff>icons/IconaImportaSVG.svg</iconset>
+         <iconset resource="resources.qrc">
+          <normaloff>:/icons/IconaImportaSVG.svg</normaloff>:/icons/IconaImportaSVG.svg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1036,8 +1054,8 @@ QPushButton:pressed {
          <string>Salva</string>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>../../../Users/anton/Downloads/IconaSalvaSVG.svg</normaloff>../../../Users/anton/Downloads/IconaSalvaSVG.svg</iconset>
+         <iconset resource="resources.qrc">
+          <normaloff>:/icons/IconaSalvaSVG.svg</normaloff>:/icons/IconaSalvaSVG.svg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1055,6 +1073,8 @@ QPushButton:pressed {
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
