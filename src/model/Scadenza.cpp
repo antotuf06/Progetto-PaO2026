@@ -21,7 +21,7 @@ bool Scadenza::isUrgent() const {           //è urgente se mancano meno di 24 o
 //getter e setter
 
 QString Scadenza::getIconPath() const {
-    return ":/icons/icons/IconaScadenzaSVG.svg";
+    return ":/icons/IconaScadenzaSVG.svg";
 };
 
 QString Scadenza::getType() const {

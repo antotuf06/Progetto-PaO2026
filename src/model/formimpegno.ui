@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormScadenza</class>
- <widget class="QWidget" name="FormScadenza">
+ <class>FormImpegno</class>
+ <widget class="QWidget" name="FormImpegno">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>280</width>
-    <height>560</height>
+    <height>620</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -178,14 +178,14 @@ QLabel, QCheckBox {
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="DataOra">
+    <widget class="QLabel" name="Data">
      <property name="text">
-      <string>Data/Ora</string>
+      <string>Data</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QDateTimeEdit" name="dateTimeEdit">
+    <widget class="QDateEdit" name="dateEdit">
      <property name="styleSheet">
       <string notr="true">QCalendarWidget QWidget#qt_calendar_navigationbar {
     background-color: #f1f5f9;
@@ -251,6 +251,26 @@ QCalendarWidget QTableView QHeaderView::section {
       <bool>true</bool>
      </property>
     </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="OraInizio">
+     <property name="text">
+      <string>Ora Inizio</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTimeEdit" name="timeStart"/>
+   </item>
+   <item>
+    <widget class="QLabel" name="OraFine">
+     <property name="text">
+      <string>Ora Fine</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTimeEdit" name="timeFinish"/>
    </item>
    <item>
     <widget class="QCheckBox" name="Ricorrenza">
