@@ -1,0 +1,110 @@
+[
+    {
+        "categoria": "Utenze",
+        "data": "2026-07-03",
+        "descrizione": "Scadenza",
+        "done": false,
+        "fineRicorrenza": "",
+        "id": 1,
+        "ora": "12:00:00",
+        "ricorrenza": 0,
+        "tipo": "Scadenza",
+        "titolo": "Bolletta Luce"
+    },
+    {
+        "categoria": "Sport",
+        "data": "2026-07-03",
+        "descrizione": "Solito gruppo",
+        "fineRicorrenza": "2026-08-03",
+        "id": 2,
+        "luogo": "Campetti",
+        "ora": "19:00:00",
+        "ricorrenza": 2,
+        "tipo": "Appuntamento",
+        "titolo": "Partita Calcetto"
+    },
+    {
+        "categoria": "Sport",
+        "data": "2026-07-10",
+        "descrizione": "Solito gruppo",
+        "fineRicorrenza": "2026-08-03",
+        "id": 2,
+        "luogo": "Campetti",
+        "ora": "19:00:00",
+        "ricorrenza": 2,
+        "tipo": "Appuntamento",
+        "titolo": "Partita Calcetto"
+    },
+    {
+        "categoria": "Sport",
+        "data": "2026-07-17",
+        "descrizione": "Solito gruppo",
+        "fineRicorrenza": "2026-08-03",
+        "id": 2,
+        "luogo": "Campetti",
+        "ora": "19:00:00",
+        "ricorrenza": 2,
+        "tipo": "Appuntamento",
+        "titolo": "Partita Calcetto"
+    },
+    {
+        "categoria": "Sport",
+        "data": "2026-07-24",
+        "descrizione": "Solito gruppo",
+        "fineRicorrenza": "2026-08-03",
+        "id": 2,
+        "luogo": "Campetti",
+        "ora": "19:00:00",
+        "ricorrenza": 2,
+        "tipo": "Appuntamento",
+        "titolo": "Partita Calcetto"
+    },
+    {
+        "categoria": "Sport",
+        "data": "2026-07-31",
+        "descrizione": "Solito gruppo",
+        "fineRicorrenza": "2026-08-03",
+        "id": 2,
+        "luogo": "Campetti",
+        "ora": "19:00:00",
+        "ricorrenza": 2,
+        "tipo": "Appuntamento",
+        "titolo": "Partita Calcetto"
+    },
+    {
+        "categoria": "Salute",
+        "data": "2026-07-03",
+        "descrizione": "Dopo i pasti",
+        "fineRicorrenza": "2026-07-05",
+        "finish": "08:05:00",
+        "id": 3,
+        "ricorrenza": 1,
+        "start": "08:00:00",
+        "tipo": "Impegno",
+        "titolo": "Antibiotico"
+    },
+    {
+        "categoria": "Salute",
+        "data": "2026-07-04",
+        "descrizione": "Dopo i pasti",
+        "fineRicorrenza": "2026-07-05",
+        "finish": "08:05:00",
+        "id": 3,
+        "ricorrenza": 1,
+        "start": "08:00:00",
+        "tipo": "Impegno",
+        "titolo": "Antibiotico"
+    },
+    {
+        "categoria": "Salute",
+        "data": "2026-07-05",
+        "descrizione": "Dopo i pasti",
+        "fineRicorrenza": "2026-07-05",
+        "finish": "08:05:00",
+        "id": 3,
+        "ricorrenza": 1,
+        "start": "08:00:00",
+        "tipo": "Impegno",
+        "titolo": "Antibiotico"
+    }
+]

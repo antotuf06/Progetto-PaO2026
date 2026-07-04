@@ -9,9 +9,15 @@ Impegno::Impegno(const QString& t, const QString& d, const QString& c, const QDa
 
 //metodi overridati
 
-bool Impegno::isUrgent() const{                    //restituisce true se mancano meno di 2 ore all'ora di inizio
+bool Impegno::isUrgent() const{                    //restituisce true se mancano meno di 2 ore all'ora di inizio, o se l'impegno è in corso
     QDateTime adesso = QDateTime::currentDateTime();
     QDateTime inizio(getDate(), getStart());
+    QDateTime fine(getDate(), getFinish());
+
+    if (adesso >= fine) {           //l'impegno è già terminato: non è più urgente
+        return false;
+    }
+
     qint64 secondiMancanti = adesso.secsTo(inizio);
 
     if (secondiMancanti <= 3600 * 2) {
@@ -23,7 +29,7 @@ bool Impegno::isUrgent() const{                    //restituisce true se mancano
 
 
 QString Impegno::getIconPath() const {
-    return ":/icons/icons/IconaImpegnoSVG.svg";
+    return ":/icons/IconaImpegnoSVG.svg";
 };
 
 QString Impegno::getType() const {return "Impegno";};

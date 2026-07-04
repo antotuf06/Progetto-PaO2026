@@ -26,7 +26,7 @@ void Manager::addAttivita(Attivita* a) {
     }
 }
 
-void Manager::addPeriodicity(Attivita* primo) {
+void Manager::addPeriodicity(Attivita* primo, bool salva) {
     if (!primo) return;
 
     //aggiungo sempre il primo elemento
@@ -51,7 +51,7 @@ void Manager::addPeriodicity(Attivita* primo) {
         }
     }
 
-    salvaFile(); //salvo automaticamente ogni volta che inseriamo qualcosa
+    if (salva) salvaFile();
 }
 
 void Manager::removeAttivita(int index) {
@@ -116,18 +116,26 @@ void Manager::salvaFile() const {
 }
 
 void Manager::caricaFile() {
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "File non trovato o impossibile da leggere. Partiremo con una lista vuota.";
+    //svuota la lista in memoria per non duplicare i dati se carichiamo 2 volte
+    clear();
+    caricaDaFile(fileName);
+}
+
+void Manager::importaFile(const QString& file) {
+    //non svuota la lista: le attivita' importate si aggiungono a quelle gia' create in sessione
+    caricaDaFile(file);
+}
+
+void Manager::caricaDaFile(const QString& file) {
+    QFile f(file);
+    if (!f.open(QIODevice::ReadOnly)) {
+        qDebug() << "File non trovato o impossibile da leggere.";
         return;
     }
 
-    //svuota la lista in memoria per non duplicare i dati se carichiamo 2 volte
-    clear();
-
     //legge tutto il file JSON e lo trasforma in un Array
-    QByteArray data = file.readAll();
-    file.close();
+    QByteArray data = f.readAll();
+    f.close();
 
     QJsonDocument doc = QJsonDocument::fromJson(data);
     const QJsonArray jsonArray = doc.array();
@@ -161,9 +169,9 @@ void Manager::caricaFile() {
 
         } else if (tipo == "Impegno") {
             QTime s = QTime::fromString(obj["start"].toString(), Qt::ISODate);
-            QTime f = QTime::fromString(obj["finish"].toString(), Qt::ISODate);
+            QTime f2 = QTime::fromString(obj["finish"].toString(), Qt::ISODate);
 
-            addAttivita(new Impegno(t, d, c, da, i, per, end, s, f));
+            addAttivita(new Impegno(t, d, c, da, i, per, end, s, f2));
 
         } else if (tipo == "Scadenza") {
             bool done = obj["done"].toBool();

@@ -21,8 +21,9 @@ public:
     // aggiunge un'attività
     void addAttivita(Attivita* a);
 
-    // aggiunge un'attività e le sue ricorrenze
-    void addPeriodicity(Attivita* primo);
+    // aggiunge un'attività e le sue ricorrenze; se salva e' false non scrive subito su file
+    // (usato dalla GUI per rimandare il salvataggio al tasto "Salva")
+    void addPeriodicity(Attivita* primo, bool salva = true);
 
     // rimuove l'attività all'indice specificato
     void removeAttivita(int index);
@@ -49,8 +50,16 @@ public:
     // salva il vettore attuale nel file specificato dal costruttore
     void salvaFile() const;
 
-    // carica dal file JSON e popola il vettore
+    // carica dal file JSON e popola il vettore (sostituendo il contenuto attuale)
     void caricaFile();
+
+    // importa le attivita' lette da un file esterno aggiungendole a quelle gia' presenti
+    // in memoria, senza toccare il file di salvataggio predefinito
+    void importaFile(const QString& file);
+
+private:
+    // legge un file JSON e aggiunge le attivita' trovate alla lista in memoria
+    void caricaDaFile(const QString& file);
 };
 
 #endif // MANAGER_H

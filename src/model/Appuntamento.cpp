@@ -22,12 +22,12 @@ bool Appuntamento::isUrgent() const {              //L'appuntamento è urgente s
     QDate oggi=QDate::currentDate();
     QTime ora=QTime::currentTime();
     if (getDate() == oggi || ora.secsTo(getHour())<=7200 ) return true;
-    if (getDate()<oggi) return true;
+    if (getDate()!=oggi) return false;
     return false;
 };
 
 QString Appuntamento::getIconPath() const {
-    return ":/icons/icons/IconaAppuntamentoSVG.svg";
+    return ":/icons/IconaAppuntamentoSVG.svg";
 };
 
 

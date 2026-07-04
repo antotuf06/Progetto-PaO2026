@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(which qmake *)",
+      "Bash(cp src/model/mainwindow.cpp /tmp_mainwindow_backup.cpp)",
+      "Bash(cp src/model/mainwindow.cpp \"C:/Users/anton/AppData/Local/Temp/claude/C--Users-anton-Desktop-ProgettoPaO-2026/22e1b977-b625-4a85-8364-9ef652c3f3fc/scratchpad/mainwindow_backup.cpp\")",
+      "Bash(timeout 4 ./ProgettoPaO2026_debug.exe)",
+      "Bash(nohup ./ProgettoPaO2026_debug.exe)",
+      "Bash(echo \"started with pid $!\")",
+      "PowerShell(Get-Process ProgettoPaO2026_debug -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force)",
+      "PowerShell(\"cleaned\")",
+      "Bash(timeout 3 ./ProgettoPaO2026_debug.exe)",
+      "Bash(cp database.json database.json.bak)",
+      "Bash(cp database.json database.json.bak2)",
+      "Bash(cp database.json.bak database.json)",
+      "Bash(rm -f database.json.bak database.json.bak2)",
+      "Bash(cp database.json.bak3 database.json)",
+      "Bash(rm -f database.json.bak3)",
+      "Bash(cp database.json database.json.bak4)",
+      "Bash(cp database.json.bak4 database.json)",
+      "Bash(rm -f database.json.bak4)"
+    ]
+  }
+}
