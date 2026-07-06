@@ -1,6 +1,7 @@
 #include "cardattivita.h"
 #include "ui_cardattivita.h"
 #include "Scadenza.h"
+#include <QMouseEvent>
 
 CardAttivita::CardAttivita(Attivita* a, QWidget *parent)
     : QFrame(parent)
@@ -35,11 +36,27 @@ void CardAttivita::aggiornaVisualizzazione()
 
     bool urgente = attivita->isUrgent();
     ui->urgentBadge->setVisible(urgente);
-    setStyleSheet(urgente
-        ? "#CardAttivita { background-color: #fff5f5; border: 2px solid #f87171; border-radius: 10px; }"
-        : "#CardAttivita { background-color: #ffffff; border: 2px solid #b0b0b0; border-radius: 10px; }");
 
     QString tipo = attivita->getType();
+
+    // colore della barra a sinistra in base al tipo di attivita'
+    QString coloreTipo = "#a855f7"; // viola: Appuntamento (default)
+    if (tipo == "Scadenza") coloreTipo = "#ec4899";      // rosa
+    else if (tipo == "Impegno") coloreTipo = "#3b82f6";  // blu
+
+    // il bordo colorato e' parte del bordo stesso della card (non un widget separato)
+    // cosi' segue esattamente la curvatura del border-radius senza uscire dai bordi
+    QString bg = urgente ? "#fff5f5" : "#ffffff";
+    QString bordo = urgente ? "#f87171" : "#b0b0b0";
+    setStyleSheet(QString(
+        "#CardAttivita {"
+        "    background-color: %1;"
+        "    border: 2px solid %2;"
+        "    border-left: 6px solid %3;"
+        "    border-radius: 10px;"
+        "}"
+    ).arg(bg, bordo, coloreTipo));
+
     bool isScadenza = (tipo == "Scadenza");
     ui->chkCompletata->setVisible(isScadenza);
     ui->btnAzione->setVisible(!isScadenza);
@@ -71,4 +88,14 @@ void CardAttivita::onChkCompletataToggled(bool checked)
     attivita->performAction(); // Scadenza::performAction inverte lo stato "done"
     aggiornaVisualizzazione();
     emit attivitaModificata(attivita);
+}
+
+void CardAttivita::mousePressEvent(QMouseEvent* event)
+{
+    // il click su checkbox/bottone non arriva qui (i widget figli lo consumano prima),
+    // quindi questo intercetta solo i click sulle parti "passive" della card
+    if (event->button() == Qt::LeftButton && attivita) {
+        emit cliccata(attivita);
+    }
+    QFrame::mousePressEvent(event);
 }

@@ -19,6 +19,9 @@ public:
     // costruisce una Scadenza con i dati correnti del form
     Scadenza* creaAttivita(unsigned int id) const;
 
+    // precompila il form con i dati di una Scadenza esistente (modalita' modifica)
+    void caricaDati(Scadenza* s);
+
 signals:
     void annulla();
     void salva();

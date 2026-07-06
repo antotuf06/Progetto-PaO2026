@@ -54,19 +54,19 @@ void Manager::addPeriodicity(Attivita* primo, bool salva) {
     if (salva) salvaFile();
 }
 
-void Manager::removeAttivita(int index) {
+void Manager::removeAttivita(int index, bool salva) {
     if (index >= 0 && index < listaAttivita.size()) {
         delete listaAttivita[index];  // Libera la memoria RAM
         listaAttivita.removeAt(index); // Rimuove il puntatore dal vettore
-        salvaFile();                   // Aggiorna il file JSON
+        if (salva) salvaFile();         // Aggiorna il file JSON
     }
 }
 
-void Manager::updateAttivita(int index, Attivita* nuova) {
+void Manager::updateAttivita(int index, Attivita* nuova, bool salva) {
     if (index >= 0 && index < listaAttivita.size() && nuova != nullptr) {
         delete listaAttivita[index];
         listaAttivita[index] = nuova;
-        salvaFile();
+        if (salva) salvaFile();
     }
 }
 
@@ -97,6 +97,10 @@ int Manager::getSize() const {
 //persistenza
 
 void Manager::salvaFile() const {
+    salvaFile(fileName);
+}
+
+void Manager::salvaFile(const QString& file) const {
     QJsonArray jsonArray;
 
     for (Attivita* a : listaAttivita) {
@@ -104,12 +108,12 @@ void Manager::salvaFile() const {
     }
 
     QJsonDocument doc(jsonArray);
-    QFile file(fileName);
+    QFile f(file);
 
     //scrive su file sovrascrivendo il contenuto precedente
-    if (file.open(QIODevice::WriteOnly)) {
-        file.write(doc.toJson());
-        file.close();
+    if (f.open(QIODevice::WriteOnly)) {
+        f.write(doc.toJson());
+        f.close();
     } else {
         qDebug() << "Errore: impossibile aprire il file per il salvataggio.";
     }

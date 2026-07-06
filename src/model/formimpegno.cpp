@@ -43,3 +43,26 @@ Impegno* FormImpegno::creaAttivita(unsigned int id) const
     return new Impegno(ui->editTitolo->text(), ui->editDescr->toPlainText(), ui->editCateg->text(),
                         ui->dateEdit->date(), id, periodicita, fineRicorrenza, ui->timeStart->time(), ui->timeFinish->time());
 }
+
+void FormImpegno::caricaDati(Impegno* i)
+{
+    if (!i) return;
+
+    ui->editTitolo->setText(i->getTitle());
+    ui->editCateg->setText(i->getCateg());
+    ui->editDescr->setPlainText(i->getDescr());
+    ui->dateEdit->setDate(i->getDate());
+    ui->timeStart->setTime(i->getStart());
+    ui->timeFinish->setTime(i->getFinish());
+
+    bool ricorrente = i->getPeriodicity() != Nessuna;
+    ui->Ricorrenza->setChecked(ricorrente);
+    if (ricorrente) {
+        QString tipo;
+        if (i->getPeriodicity() == Giornaliera) tipo = "Giornaliera";
+        else if (i->getPeriodicity() == Settimanale) tipo = "Settimanale";
+        else if (i->getPeriodicity() == Mensile) tipo = "Mensile";
+        ui->comboBox->setCurrentText(tipo);
+        ui->dateRicor->setDate(i->getEndPeriod());
+    }
+}

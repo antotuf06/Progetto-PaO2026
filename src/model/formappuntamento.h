@@ -19,6 +19,9 @@ public:
     // costruisce un Appuntamento con i dati correnti del form
     Appuntamento* creaAttivita(unsigned int id) const;
 
+    // precompila il form con i dati di un Appuntamento esistente (modalita' modifica)
+    void caricaDati(Appuntamento* a);
+
 signals:
     void annulla();
     void salva();

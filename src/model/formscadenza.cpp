@@ -43,3 +43,25 @@ Scadenza* FormScadenza::creaAttivita(unsigned int id) const
     return new Scadenza(ui->editTitolo->text(), ui->editDescr->toPlainText(), ui->editCateg->text(),
                          ui->dateTimeEdit->date(), id, periodicita, fineRicorrenza, ui->dateTimeEdit->time(), false);
 }
+
+void FormScadenza::caricaDati(Scadenza* s)
+{
+    if (!s) return;
+
+    ui->editTitolo->setText(s->getTitle());
+    ui->editCateg->setText(s->getCateg());
+    ui->editDescr->setPlainText(s->getDescr());
+    ui->dateTimeEdit->setDate(s->getDate());
+    ui->dateTimeEdit->setTime(s->getHour());
+
+    bool ricorrente = s->getPeriodicity() != Nessuna;
+    ui->Ricorrenza->setChecked(ricorrente);
+    if (ricorrente) {
+        QString tipo;
+        if (s->getPeriodicity() == Giornaliera) tipo = "Giornaliera";
+        else if (s->getPeriodicity() == Settimanale) tipo = "Settimanale";
+        else if (s->getPeriodicity() == Mensile) tipo = "Mensile";
+        ui->comboBox->setCurrentText(tipo);
+        ui->dateRicor->setDate(s->getEndPeriod());
+    }
+}

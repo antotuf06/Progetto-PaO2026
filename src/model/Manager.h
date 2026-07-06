@@ -25,11 +25,11 @@ public:
     // (usato dalla GUI per rimandare il salvataggio al tasto "Salva")
     void addPeriodicity(Attivita* primo, bool salva = true);
 
-    // rimuove l'attività all'indice specificato
-    void removeAttivita(int index);
+    // rimuove l'attività all'indice specificato; se salva e' false non scrive subito su file
+    void removeAttivita(int index, bool salva = true);
 
-    // sostituisce un'attività all'indice dato con una modificata
-    void updateAttivita(int index, Attivita* nuova);
+    // sostituisce un'attività all'indice dato con una modificata; se salva e' false non scrive subito su file
+    void updateAttivita(int index, Attivita* nuova, bool salva = true);
 
     // svuota completamente la lista
     void clear();
@@ -49,6 +49,9 @@ public:
     //persistenza
     // salva il vettore attuale nel file specificato dal costruttore
     void salvaFile() const;
+
+    // salva il vettore attuale nel file specificato (usato quando l'utente sceglie il percorso dalla GUI)
+    void salvaFile(const QString& file) const;
 
     // carica dal file JSON e popola il vettore (sostituendo il contenuto attuale)
     void caricaFile();

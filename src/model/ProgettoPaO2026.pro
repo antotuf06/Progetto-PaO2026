@@ -15,6 +15,7 @@ SOURCES += \
     Manager.cpp \
     Scadenza.cpp \
     cardattivita.cpp \
+    dettagliattivita.cpp \
     formappuntamento.cpp \
     formimpegno.cpp \
     formscadenza.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     Manager.h \
     Scadenza.h \
     cardattivita.h \
+    dettagliattivita.h \
     formappuntamento.h \
     formimpegno.h \
     formscadenza.h \
@@ -35,6 +37,7 @@ HEADERS += \
 
 FORMS += \
     cardattivita.ui \
+    dettagliattivita.ui \
     formappuntamento.ui \
     formimpegno.ui \
     formscadenza.ui \
@@ -50,6 +53,7 @@ RESOURCES += \
     resources.qrc
 
 DISTFILES += \
+    Dockerfile \
     icons/IconaAppuntamentoSVG.svg \
     icons/IconaHomeSVG.svg \
     icons/IconaImpegnoSVG.svg \

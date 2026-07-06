@@ -43,3 +43,26 @@ Appuntamento* FormAppuntamento::creaAttivita(unsigned int id) const
     return new Appuntamento(ui->editTitolo->text(), ui->editDescr->toPlainText(), ui->editCateg->text(),
                              ui->dateEdit->date(), id, periodicita, fineRicorrenza, ui->editLuogo->text(), ui->timeEdit->time());
 }
+
+void FormAppuntamento::caricaDati(Appuntamento* a)
+{
+    if (!a) return;
+
+    ui->editTitolo->setText(a->getTitle());
+    ui->editCateg->setText(a->getCateg());
+    ui->editDescr->setPlainText(a->getDescr());
+    ui->editLuogo->setText(a->getPlace());
+    ui->dateEdit->setDate(a->getDate());
+    ui->timeEdit->setTime(a->getHour());
+
+    bool ricorrente = a->getPeriodicity() != Nessuna;
+    ui->Ricorrenza->setChecked(ricorrente);
+    if (ricorrente) {
+        QString tipo;
+        if (a->getPeriodicity() == Giornaliera) tipo = "Giornaliera";
+        else if (a->getPeriodicity() == Settimanale) tipo = "Settimanale";
+        else if (a->getPeriodicity() == Mensile) tipo = "Mensile";
+        ui->comboBox->setCurrentText(tipo);
+        ui->dateRicor->setDate(a->getEndPeriod());
+    }
+}

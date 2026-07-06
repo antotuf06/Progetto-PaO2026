@@ -24,12 +24,14 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-    void on_page0_customContextMenuRequested(const QPoint &pos);
     void onAttivitaModificata(Attivita* a);
     void onCreaImpegno();
     void onCreaAppuntamento();
     void onCreaScadenza();
     void onCreazioneAnnullata();
+    void mostraDettagli(Attivita* a);
+    void onModificaAttivita(Attivita* a);
+    void onEliminaAttivita(Attivita* a);
 
 private:
     Ui::MainWindow *ui;

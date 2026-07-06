@@ -4,6 +4,8 @@
 #include <QFrame>
 #include "Attivita.h"
 
+class QMouseEvent;
+
 namespace Ui {
 class CardAttivita;
 }
@@ -21,6 +23,10 @@ public:
 
 signals:
     void attivitaModificata(Attivita* a);
+    void cliccata(Attivita* a);
+
+protected:
+    void mousePressEvent(QMouseEvent* event) override;
 
 private slots:
     void onBtnAzioneClicked();

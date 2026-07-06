@@ -32,6 +32,7 @@
    <string notr="true">#CardAttivita {
     background-color: #ffffff;
     border: 2px solid #b0b0b0;
+    border-left: 6px solid #a855f7;
     border-radius: 10px;
 }</string>
   </property>
@@ -43,7 +44,7 @@
   </property>
   <layout class="QVBoxLayout" name="cardLayout">
    <property name="leftMargin">
-    <number>12</number>
+    <number>10</number>
    </property>
    <property name="topMargin">
     <number>10</number>

@@ -1,9 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "cardattivita.h"
+#include "dettagliattivita.h"
 #include "formscadenza.h"
 #include "formimpegno.h"
 #include "formappuntamento.h"
+#include "Scadenza.h"
+#include "Impegno.h"
+#include "Appuntamento.h"
 #include <QScrollArea>
 #include <QResizeEvent>
 #include <QFileDialog>
@@ -60,7 +64,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->datePlus2, &QToolButton::clicked, this, [this]() { ui->dateEdit->setDate(ui->dateEdit->date().addDays(7)); });
     connect(ui->dateEdit, &QDateEdit::dateChanged, this, [this]() { popolaGrigliaAttivita(); });
 
-    connect(ui->SaveButton, &QPushButton::clicked, this, [this]() { manager->salvaFile(); });
+    connect(ui->SaveButton, &QPushButton::clicked, this, [this]() {
+        QString file = QFileDialog::getSaveFileName(this, "Salva attività", QString(), "File JSON (*.json)");
+        if (!file.isEmpty()) {
+            manager->salvaFile(file);
+        }
+    });
 
     connect(ui->ImportButton, &QPushButton::clicked, this, [this]() {
         QString file = QFileDialog::getOpenFileName(this, "Importa attività", QString(), "File JSON (*.json)");
@@ -69,17 +78,33 @@ MainWindow::MainWindow(QWidget *parent)
             popolaGrigliaAttivita();
         }
     });
+
+    ui->fltrImp->setCheckable(true);
+    ui->fltrApp->setCheckable(true);
+    ui->fltrScad->setCheckable(true);
+    ui->fltrUrg->setCheckable(true);
+
+    connect(ui->fltrImp, &QPushButton::toggled, this, [this]() { popolaGrigliaAttivita(); });
+    connect(ui->fltrApp, &QPushButton::toggled, this, [this]() { popolaGrigliaAttivita(); });
+    connect(ui->fltrScad, &QPushButton::toggled, this, [this]() { popolaGrigliaAttivita(); });
+    connect(ui->fltrUrg, &QPushButton::toggled, this, [this]() { popolaGrigliaAttivita(); });
+
+    connect(ui->fltrHome, &QPushButton::clicked, this, [this]() {
+        ui->fltrImp->setChecked(false);
+        ui->fltrApp->setChecked(false);
+        ui->fltrScad->setChecked(false);
+        ui->fltrUrg->setChecked(false);
+        ui->SearchBar->clear();
+        popolaGrigliaAttivita();
+    });
+
+    connect(ui->SearchBar, &QLineEdit::textChanged, this, [this]() { popolaGrigliaAttivita(); });
 }
 
 MainWindow::~MainWindow()
 {
     delete manager;
     delete ui;
-}
-
-void MainWindow::on_page0_customContextMenuRequested(const QPoint &pos)
-{
-
 }
 
 void MainWindow::popolaGrigliaAttivita()
@@ -95,18 +120,44 @@ void MainWindow::popolaGrigliaAttivita()
     // mostra solo le attivita' della data selezionata nel frameData; le istanze di
     // un'attivita' ricorrente sono gia' oggetti separati (uno per occorrenza, generati
     // da Manager::addPeriodicity), quindi questo filtro le mostra automaticamente
-    // tutte nei rispettivi giorni
+    // tutte nei rispettivi giorni. Si combina poi con i filtri per tipo/urgenza
+    // della colonna sinistra e con il testo della barra di ricerca.
     QDate dataSelezionata = ui->dateEdit->date();
+    bool soloImpegno = ui->fltrImp->isChecked();
+    bool soloAppuntamento = ui->fltrApp->isChecked();
+    bool soloScadenza = ui->fltrScad->isChecked();
+    bool soloUrgenti = ui->fltrUrg->isChecked();
+    bool nessunFiltroTipo = !soloImpegno && !soloAppuntamento && !soloScadenza;
+    QString testoRicerca = ui->SearchBar->text().trimmed();
+
     QVector<Attivita*> lista;
     for (Attivita* a : manager->getLista()) {
-        if (a->getDate() == dataSelezionata) {
-            lista.append(a);
+        if (a->getDate() != dataSelezionata) continue;
+
+        if (!nessunFiltroTipo) {
+            QString tipo = a->getType();
+            bool tipoOk = (soloImpegno && tipo == "Impegno")
+                       || (soloAppuntamento && tipo == "Appuntamento")
+                       || (soloScadenza && tipo == "Scadenza");
+            if (!tipoOk) continue;
         }
+
+        if (soloUrgenti && !a->isUrgent()) continue;
+
+        if (!testoRicerca.isEmpty()) {
+            bool trovato = a->getTitle().contains(testoRicerca, Qt::CaseInsensitive)
+                        || a->getCateg().contains(testoRicerca, Qt::CaseInsensitive)
+                        || a->getDescr().contains(testoRicerca, Qt::CaseInsensitive);
+            if (!trovato) continue;
+        }
+
+        lista.append(a);
     }
 
     for (int idx = 0; idx < lista.size(); ++idx) {
         CardAttivita* card = new CardAttivita(lista[idx]);
         connect(card, &CardAttivita::attivitaModificata, this, &MainWindow::onAttivitaModificata);
+        connect(card, &CardAttivita::cliccata, this, &MainWindow::mostraDettagli);
         ui->gridAttivita->addWidget(card, idx / colonne, idx % colonne, Qt::AlignTop | Qt::AlignLeft);
     }
 
@@ -225,4 +276,92 @@ unsigned int MainWindow::prossimoId() const
         maxId = qMax(maxId, a->getId());
     }
     return maxId + 1;
+}
+
+void MainWindow::mostraDettagli(Attivita* a)
+{
+    QLayout* layout = ui->detailsPage->layout();
+    QLayoutItem* item;
+    while ((item = layout->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
+
+    DettagliAttivita* dettagli = new DettagliAttivita(a);
+    connect(dettagli, &DettagliAttivita::richiestaModifica, this, &MainWindow::onModificaAttivita);
+    connect(dettagli, &DettagliAttivita::richiestaEliminazione, this, &MainWindow::onEliminaAttivita);
+
+    QScrollArea* scrollArea = new QScrollArea();
+    scrollArea->setWidget(dettagli);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setStyleSheet("background-color: transparent;");
+
+    layout->addWidget(scrollArea);
+    ui->rxColumn->setCurrentWidget(ui->detailsPage);
+}
+
+void MainWindow::onModificaAttivita(Attivita* a)
+{
+    if (!a) return;
+
+    QString tipo = a->getType();
+    if (tipo == "Scadenza") {
+        FormScadenza* form = new FormScadenza();
+        form->caricaDati(static_cast<Scadenza*>(a));
+        connect(form, &FormScadenza::salva, this, [this, form, a]() {
+            int index = manager->getLista().indexOf(a);
+            if (index >= 0) {
+                manager->updateAttivita(index, form->creaAttivita(a->getId()), false);
+                popolaGrigliaAttivita();
+                mostraDettagli(manager->getAttivita(index));
+            } else {
+                popolaGrigliaAttivita();
+                onCreazioneAnnullata();
+            }
+        });
+        mostraFormCreazione(form);
+    } else if (tipo == "Impegno") {
+        FormImpegno* form = new FormImpegno();
+        form->caricaDati(static_cast<Impegno*>(a));
+        connect(form, &FormImpegno::salva, this, [this, form, a]() {
+            int index = manager->getLista().indexOf(a);
+            if (index >= 0) {
+                manager->updateAttivita(index, form->creaAttivita(a->getId()), false);
+                popolaGrigliaAttivita();
+                mostraDettagli(manager->getAttivita(index));
+            } else {
+                popolaGrigliaAttivita();
+                onCreazioneAnnullata();
+            }
+        });
+        mostraFormCreazione(form);
+    } else if (tipo == "Appuntamento") {
+        FormAppuntamento* form = new FormAppuntamento();
+        form->caricaDati(static_cast<Appuntamento*>(a));
+        connect(form, &FormAppuntamento::salva, this, [this, form, a]() {
+            int index = manager->getLista().indexOf(a);
+            if (index >= 0) {
+                manager->updateAttivita(index, form->creaAttivita(a->getId()), false);
+                popolaGrigliaAttivita();
+                mostraDettagli(manager->getAttivita(index));
+            } else {
+                popolaGrigliaAttivita();
+                onCreazioneAnnullata();
+            }
+        });
+        mostraFormCreazione(form);
+    }
+}
+
+void MainWindow::onEliminaAttivita(Attivita* a)
+{
+    if (!a) return;
+
+    int index = manager->getLista().indexOf(a);
+    if (index >= 0) {
+        manager->removeAttivita(index, false); // non salva subito su file
+    }
+    popolaGrigliaAttivita();
+    onCreazioneAnnullata();
 }
