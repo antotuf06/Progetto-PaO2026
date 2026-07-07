@@ -8,40 +8,42 @@ CONFIG += c++17
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += headers
+
 SOURCES += \
-    Appuntamento.cpp \
-    Attivita.cpp \
-    Impegno.cpp \
-    Manager.cpp \
-    Scadenza.cpp \
-    cardattivita.cpp \
-    dettagliattivita.cpp \
-    formappuntamento.cpp \
-    formimpegno.cpp \
-    formscadenza.cpp \
-    main.cpp \
-    mainwindow.cpp
+    sources/Appuntamento.cpp \
+    sources/Attivita.cpp \
+    sources/Impegno.cpp \
+    sources/Manager.cpp \
+    sources/Scadenza.cpp \
+    sources/cardattivita.cpp \
+    sources/dettagliattivita.cpp \
+    sources/formappuntamento.cpp \
+    sources/formimpegno.cpp \
+    sources/formscadenza.cpp \
+    sources/main.cpp \
+    sources/mainwindow.cpp
 
 HEADERS += \
-    Appuntamento.h \
-    Impegno.h \
-    Manager.h \
-    Scadenza.h \
-    cardattivita.h \
-    dettagliattivita.h \
-    formappuntamento.h \
-    formimpegno.h \
-    formscadenza.h \
-    mainwindow.h \
-    Attivita.h
+    headers/Appuntamento.h \
+    headers/Impegno.h \
+    headers/Manager.h \
+    headers/Scadenza.h \
+    headers/cardattivita.h \
+    headers/dettagliattivita.h \
+    headers/formappuntamento.h \
+    headers/formimpegno.h \
+    headers/formscadenza.h \
+    headers/mainwindow.h \
+    headers/Attivita.h
 
 FORMS += \
-    cardattivita.ui \
-    dettagliattivita.ui \
-    formappuntamento.ui \
-    formimpegno.ui \
-    formscadenza.ui \
-    mainwindow.ui
+    ui/cardattivita.ui \
+    ui/dettagliattivita.ui \
+    ui/formappuntamento.ui \
+    ui/formimpegno.ui \
+    ui/formscadenza.ui \
+    ui/mainwindow.ui
 
 
 # Default rules for deployment.
