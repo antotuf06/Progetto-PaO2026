@@ -92,7 +92,7 @@
 }</string>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Shape::NoFrame</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <layout class="QHBoxLayout" name="badgeLayout">
       <property name="spacing">
@@ -157,10 +157,10 @@
    <item>
     <widget class="Line" name="separatore1">
      <property name="frameShape">
-      <enum>QFrame::Shape::HLine</enum>
+      <enum>QFrame::HLine</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Shadow::Sunken</enum>
+      <enum>QFrame::Sunken</enum>
      </property>
     </widget>
    </item>
@@ -203,7 +203,7 @@
    <item>
     <spacer name="verticalSpacerDettagli">
      <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -252,7 +252,7 @@
      <item>
       <spacer name="horizontalSpacerDettagli">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>

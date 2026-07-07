@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->centralArea->setStretchFactor(ui->rxColumn, 1);
 
     // l'app parte sempre senza attivita': compaiono solo importando un file o creandole
-    colonneCorrenti = 2; // valore iniziale ragionevole; verra' corretto al primo resize reale
+    colonneCorrenti = 2;
     popolaGrigliaAttivita();
 
     menuCreaAttivita = new QMenu(this);
@@ -57,6 +57,9 @@ MainWindow::MainWindow(QWidget *parent)
     menuCreaAttivita->addAction("Scadenza", this, &MainWindow::onCreaScadenza);
 
     ui->btnCreaAttivita->setMenu(menuCreaAttivita);
+
+
+    menuCreaAttivita->installEventFilter(this);
 
     connect(ui->dateMin2, &QToolButton::clicked, this, [this]() { ui->dateEdit->setDate(ui->dateEdit->date().addDays(-7)); });
     connect(ui->dateMin1, &QToolButton::clicked, this, [this]() { ui->dateEdit->setDate(ui->dateEdit->date().addDays(-1)); });
@@ -117,11 +120,7 @@ void MainWindow::popolaGrigliaAttivita()
 
     const int colonne = qMax(1, colonneCorrenti);
 
-    // mostra solo le attivita' della data selezionata nel frameData; le istanze di
-    // un'attivita' ricorrente sono gia' oggetti separati (uno per occorrenza, generati
-    // da Manager::addPeriodicity), quindi questo filtro le mostra automaticamente
-    // tutte nei rispettivi giorni. Si combina poi con i filtri per tipo/urgenza
-    // della colonna sinistra e con il testo della barra di ricerca.
+    // mostra solo le attivita' della data selezionata nel frameData
     QDate dataSelezionata = ui->dateEdit->date();
     bool soloImpegno = ui->fltrImp->isChecked();
     bool soloAppuntamento = ui->fltrApp->isChecked();
@@ -161,10 +160,6 @@ void MainWindow::popolaGrigliaAttivita()
         ui->gridAttivita->addWidget(card, idx / colonne, idx % colonne, Qt::AlignTop | Qt::AlignLeft);
     }
 
-    // spinge tutto lo spazio in eccesso oltre l'ultima riga/colonna usata,
-    // cosi' le card restano impacchettate senza spaziature extra tra loro;
-    // azzera prima gli stretch di eventuali configurazioni precedenti (numero
-    // di colonne diverso) cosi' non restano stretch "fantasma" su righe/colonne vecchie
     int righe = lista.isEmpty() ? 0 : (lista.size() + colonne - 1) / colonne;
     for (int i = 0; i < 8; ++i) {
         ui->gridAttivita->setColumnStretch(i, 0);
@@ -178,6 +173,23 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
     adattaLayout();
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == menuCreaAttivita && event->type() == QEvent::Show) {
+        const QSize menuSize = menuCreaAttivita->size();
+        const QPoint sottoBottone = ui->btnCreaAttivita->mapToGlobal(QPoint(0, ui->btnCreaAttivita->height()));
+        const QPoint sopraBottone = ui->btnCreaAttivita->mapToGlobal(QPoint(0, 0)) - QPoint(0, menuSize.height());
+        const int finestraFondo = this->mapToGlobal(QPoint(0, this->height())).y();
+
+        if (sottoBottone.y() + menuSize.height() > finestraFondo) {
+            menuCreaAttivita->move(sopraBottone);
+        } else {
+            menuCreaAttivita->move(sottoBottone);
+        }
+    }
+    return QMainWindow::eventFilter(watched, event);
 }
 
 void MainWindow::adattaLayout()

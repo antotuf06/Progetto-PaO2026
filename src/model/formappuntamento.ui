@@ -70,13 +70,19 @@ QDateEdit::down-button:pressed, QTimeEdit::down-button:pressed, QDateTimeEdit::d
 }
 
 QDateEdit::up-arrow, QTimeEdit::up-arrow, QDateTimeEdit::up-arrow {
-    width: 9px;
-    height: 9px;
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #6b21a8;
 }
 
 QDateEdit::down-arrow, QTimeEdit::down-arrow, QDateTimeEdit::down-arrow {
-    width: 9px;
-    height: 9px;
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #6b21a8;
 }
 
 
@@ -279,7 +285,21 @@ QCalendarWidget QTableView QHeaderView::section {
    <item>
     <widget class="QCheckBox" name="Ricorrenza">
      <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #a855f7;
+    border: 1px solid #a855f7;
+}</string>
      </property>
      <property name="text">
       <string>Ricorrente fino al...</string>
@@ -453,7 +473,7 @@ QComboBox QAbstractItemView {
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>

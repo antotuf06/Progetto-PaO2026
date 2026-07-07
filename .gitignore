@@ -49,4 +49,6 @@ qmake_qmake_all.qpc
 Thumbs.db
 *.swp
 *~
-git check-ignore -v build/
+
+# --- Claude Code ---
+.claude/
