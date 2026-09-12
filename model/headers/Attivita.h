@@ -5,6 +5,7 @@
 #include <QTime>
 #include <iostream>
 #include <QJsonObject>
+#include "AttivitaVisitor.h"
 
 enum periodicityTipe {Nessuna, Giornaliera, Settimanale, Mensile};
 
@@ -27,10 +28,11 @@ class Attivita {
         virtual bool isUrgent() const =0; //restituisce true o false con condizioni diverse nelle classi derivate
         virtual void performAction()= 0; // fa un'azione specifica in base al tipo di attività
         virtual QDate calcolaProssimaData() const = 0; //calcola la prossima data della ricorrenza
+        virtual void accept(AttivitaVisitor& v) = 0; //abilita il double dispatch (pattern Visitor) per operazioni esterne specifiche per tipo, senza controlli espliciti sul tipo
 
         //metodi per visualizzazione e GUI
         virtual QString getIconPath() const = 0; //per trovare il path dell'icona specifica per ogni classe
-        virtual QString getType() const = 0; //restituisce il tipo di attività
+        virtual QString getType() const = 0; //restituisce il tipo di attività, da usare solo per mostrare una semplice stringa (non per il controllo di flusso)
         virtual QString getSummary() const = 0; // restituisce le informazioni base in base al tipo di Attività
 
 

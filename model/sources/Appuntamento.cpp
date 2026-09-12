@@ -59,6 +59,10 @@ QDate Appuntamento::calcolaProssimaData() const {
     return QDate();
 }
 
+void Appuntamento::accept(AttivitaVisitor& v) {
+    v.visit(*this);
+}
+
 QJsonObject Appuntamento::toJson() const {
     QJsonObject json = baseJson(); // campi comuni
     json["tipo"] = "Appuntamento";   // tipo attività

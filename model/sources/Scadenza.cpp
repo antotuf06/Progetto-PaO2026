@@ -67,6 +67,10 @@ QDate Scadenza::calcolaProssimaData() const {  //restituisce un QDate nullo, per
     return QDate();
 }
 
+void Scadenza::accept(AttivitaVisitor& v) {
+    v.visit(*this);
+}
+
 //salvataggio in json
 QJsonObject Scadenza::toJson() const {
     QJsonObject json = baseJson(); // campi comuni

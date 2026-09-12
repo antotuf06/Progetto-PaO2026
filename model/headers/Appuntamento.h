@@ -30,6 +30,7 @@ public:
     QString getSummary() const override;
     void performAction() override;
     QDate calcolaProssimaData() const override;
+    void accept(AttivitaVisitor& v) override;
 
     //salvataggio json
     QJsonObject toJson() const override;

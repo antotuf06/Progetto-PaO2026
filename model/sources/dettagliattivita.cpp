@@ -19,23 +19,13 @@ DettagliAttivita::DettagliAttivita(Attivita* a, QWidget *parent)
     ui->iconLabel->setPixmap(QPixmap(attivita->getIconPath()));
     ui->urgentBadge->setVisible(attivita->isUrgent());
 
+    // getType() qui mostra solo una semplice stringa, uso consentito dalle specifiche
     aggiungiRiga("Tipo", attivita->getType());
     if (!attivita->getCateg().isEmpty()) aggiungiRiga("Categoria", attivita->getCateg());
     aggiungiRiga("Data", attivita->getDate().toString("dd/MM/yyyy"));
 
-    QString tipo = attivita->getType();
-    if (tipo == "Scadenza") {
-        Scadenza* s = static_cast<Scadenza*>(attivita);
-        aggiungiRiga("Ora", s->getHour().toString("HH:mm"));
-        aggiungiRiga("Stato", s->isDone() ? "Completata" : "Da fare");
-    } else if (tipo == "Impegno") {
-        Impegno* i = static_cast<Impegno*>(attivita);
-        aggiungiRiga("Orario", QString("%1 - %2").arg(i->getStart().toString("HH:mm"), i->getFinish().toString("HH:mm")));
-    } else if (tipo == "Appuntamento") {
-        Appuntamento* app = static_cast<Appuntamento*>(attivita);
-        aggiungiRiga("Ora", app->getHour().toString("HH:mm"));
-        if (!app->getPlace().isEmpty()) aggiungiRiga("Luogo", app->getPlace());
-    }
+    // dispatch polimorfico (pattern Visitor): ogni tipo aggiunge le proprie righe di dettaglio
+    attivita->accept(*this);
 
     aggiungiRiga("Ricorrenza", periodicitaTesto(attivita));
 
@@ -81,4 +71,21 @@ QString DettagliAttivita::periodicitaTesto(const Attivita* a) const
     case Mensile: return QString("Mensile fino al %1").arg(a->getEndPeriod().toString("dd/MM/yyyy"));
     default: return "Nessuna";
     }
+}
+
+void DettagliAttivita::visit(Scadenza& s)
+{
+    aggiungiRiga("Ora", s.getHour().toString("HH:mm"));
+    aggiungiRiga("Stato", s.isDone() ? "Completata" : "Da fare");
+}
+
+void DettagliAttivita::visit(Impegno& i)
+{
+    aggiungiRiga("Orario", QString("%1 - %2").arg(i.getStart().toString("HH:mm"), i.getFinish().toString("HH:mm")));
+}
+
+void DettagliAttivita::visit(Appuntamento& a)
+{
+    aggiungiRiga("Ora", a.getHour().toString("HH:mm"));
+    if (!a.getPlace().isEmpty()) aggiungiRiga("Luogo", a.getPlace());
 }

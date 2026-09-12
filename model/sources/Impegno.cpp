@@ -81,6 +81,10 @@ QDate Impegno::calcolaProssimaData() const {
     return QDate();
 }
 
+void Impegno::accept(AttivitaVisitor& v) {
+    v.visit(*this);
+}
+
 //salvataggio in json
 QJsonObject Impegno::toJson() const{
     QJsonObject json = baseJson(); // campi comuni

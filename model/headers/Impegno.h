@@ -23,6 +23,7 @@ public:
     QString getSummary() const override;
     void performAction() override;
     QDate calcolaProssimaData() const override;
+    void accept(AttivitaVisitor& v) override;
 
     //getter e setter
     QTime getStart() const;

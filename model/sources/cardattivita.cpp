@@ -1,6 +1,8 @@
 #include "cardattivita.h"
 #include "ui_cardattivita.h"
 #include "Scadenza.h"
+#include "Impegno.h"
+#include "Appuntamento.h"
 #include <QMouseEvent>
 
 CardAttivita::CardAttivita(Attivita* a, QWidget *parent)
@@ -37,15 +39,16 @@ void CardAttivita::aggiornaVisualizzazione()
     bool urgente = attivita->isUrgent();
     ui->urgentBadge->setVisible(urgente);
 
-    QString tipo = attivita->getType();
+    // dispatch polimorfico (pattern Visitor): ogni tipo configura a modo suo
+    // colore, checkbox/pulsante azione, senza controllare esplicitamente il tipo
+    attivita->accept(*this);
+}
 
-    // colore della barra a sinistra in base al tipo di attivita'
-    QString coloreTipo = "#a855f7"; // viola: Appuntamento (default)
-    if (tipo == "Scadenza") coloreTipo = "#ec4899";      // rosa
-    else if (tipo == "Impegno") coloreTipo = "#3b82f6";  // blu
-
+void CardAttivita::impostaStileBordo(const QString& coloreAccento)
+{
     // il bordo colorato e' parte del bordo stesso della card (non un widget separato)
     // cosi' segue esattamente la curvatura del border-radius senza uscire dai bordi
+    bool urgente = attivita->isUrgent();
     QString bg = urgente ? "#fff5f5" : "#ffffff";
     QString bordo = urgente ? "#f87171" : "#b0b0b0";
     setStyleSheet(QString(
@@ -55,22 +58,35 @@ void CardAttivita::aggiornaVisualizzazione()
         "    border-left: 6px solid %3;"
         "    border-radius: 10px;"
         "}"
-    ).arg(bg, bordo, coloreTipo));
+    ).arg(bg, bordo, coloreAccento));
+}
 
-    bool isScadenza = (tipo == "Scadenza");
-    ui->chkCompletata->setVisible(isScadenza);
-    ui->btnAzione->setVisible(!isScadenza);
+void CardAttivita::visit(Scadenza& s)
+{
+    impostaStileBordo("#ec4899"); // rosa
+    ui->chkCompletata->setVisible(true);
+    ui->chkCompletata->blockSignals(true);
+    ui->chkCompletata->setChecked(s.isDone());
+    ui->chkCompletata->blockSignals(false);
+    ui->btnAzione->setVisible(false);
+}
 
-    if (isScadenza) {
-        Scadenza* s = static_cast<Scadenza*>(attivita);
-        ui->chkCompletata->blockSignals(true);
-        ui->chkCompletata->setChecked(s->isDone());
-        ui->chkCompletata->blockSignals(false);
-    } else if (tipo == "Impegno") {
-        ui->btnAzione->setText("+30min");
-    } else if (tipo == "Appuntamento") {
-        ui->btnAzione->setText("+1h");
-    }
+void CardAttivita::visit(Impegno& i)
+{
+    Q_UNUSED(i);
+    impostaStileBordo("#3b82f6"); // blu
+    ui->chkCompletata->setVisible(false);
+    ui->btnAzione->setVisible(true);
+    ui->btnAzione->setText("+30min");
+}
+
+void CardAttivita::visit(Appuntamento& a)
+{
+    Q_UNUSED(a);
+    impostaStileBordo("#a855f7"); // viola
+    ui->chkCompletata->setVisible(false);
+    ui->btnAzione->setVisible(true);
+    ui->btnAzione->setText("+1h");
 }
 
 void CardAttivita::onBtnAzioneClicked()

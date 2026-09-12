@@ -134,10 +134,9 @@ void MainWindow::popolaGrigliaAttivita()
         if (a->getDate() != dataSelezionata) continue;
 
         if (!nessunFiltroTipo) {
-            QString tipo = a->getType();
-            bool tipoOk = (soloImpegno && tipo == "Impegno")
-                       || (soloAppuntamento && tipo == "Appuntamento")
-                       || (soloScadenza && tipo == "Scadenza");
+            bool tipoOk = (soloImpegno && dynamic_cast<Impegno*>(a))
+                       || (soloAppuntamento && dynamic_cast<Appuntamento*>(a))
+                       || (soloScadenza && dynamic_cast<Scadenza*>(a));
             if (!tipoOk) continue;
         }
 
@@ -313,57 +312,35 @@ void MainWindow::mostraDettagli(Attivita* a)
     ui->rxColumn->setCurrentWidget(ui->detailsPage);
 }
 
+template<typename FormT, typename ModelT>
+void MainWindow::apriFormModifica(ModelT* modello)
+{
+    FormT* form = new FormT();
+    form->caricaDati(modello);
+    connect(form, &FormT::salva, this, [this, form, modello]() {
+        int index = manager->getLista().indexOf(modello);
+        if (index >= 0) {
+            manager->updateAttivita(index, form->creaAttivita(modello->getId()), false);
+            popolaGrigliaAttivita();
+            mostraDettagli(manager->getAttivita(index));
+        } else {
+            popolaGrigliaAttivita();
+            onCreazioneAnnullata();
+        }
+    });
+    mostraFormCreazione(form);
+}
+
+void MainWindow::visit(Scadenza& s) { apriFormModifica<FormScadenza>(&s); }
+void MainWindow::visit(Impegno& i) { apriFormModifica<FormImpegno>(&i); }
+void MainWindow::visit(Appuntamento& a) { apriFormModifica<FormAppuntamento>(&a); }
+
 void MainWindow::onModificaAttivita(Attivita* a)
 {
     if (!a) return;
 
-    QString tipo = a->getType();
-    if (tipo == "Scadenza") {
-        FormScadenza* form = new FormScadenza();
-        form->caricaDati(static_cast<Scadenza*>(a));
-        connect(form, &FormScadenza::salva, this, [this, form, a]() {
-            int index = manager->getLista().indexOf(a);
-            if (index >= 0) {
-                manager->updateAttivita(index, form->creaAttivita(a->getId()), false);
-                popolaGrigliaAttivita();
-                mostraDettagli(manager->getAttivita(index));
-            } else {
-                popolaGrigliaAttivita();
-                onCreazioneAnnullata();
-            }
-        });
-        mostraFormCreazione(form);
-    } else if (tipo == "Impegno") {
-        FormImpegno* form = new FormImpegno();
-        form->caricaDati(static_cast<Impegno*>(a));
-        connect(form, &FormImpegno::salva, this, [this, form, a]() {
-            int index = manager->getLista().indexOf(a);
-            if (index >= 0) {
-                manager->updateAttivita(index, form->creaAttivita(a->getId()), false);
-                popolaGrigliaAttivita();
-                mostraDettagli(manager->getAttivita(index));
-            } else {
-                popolaGrigliaAttivita();
-                onCreazioneAnnullata();
-            }
-        });
-        mostraFormCreazione(form);
-    } else if (tipo == "Appuntamento") {
-        FormAppuntamento* form = new FormAppuntamento();
-        form->caricaDati(static_cast<Appuntamento*>(a));
-        connect(form, &FormAppuntamento::salva, this, [this, form, a]() {
-            int index = manager->getLista().indexOf(a);
-            if (index >= 0) {
-                manager->updateAttivita(index, form->creaAttivita(a->getId()), false);
-                popolaGrigliaAttivita();
-                mostraDettagli(manager->getAttivita(index));
-            } else {
-                popolaGrigliaAttivita();
-                onCreazioneAnnullata();
-            }
-        });
-        mostraFormCreazione(form);
-    }
+    // dispatch polimorfico (pattern Visitor) al form corretto, senza controllare il tipo esplicitamente
+    a->accept(*this);
 }
 
 void MainWindow::onEliminaAttivita(Attivita* a)

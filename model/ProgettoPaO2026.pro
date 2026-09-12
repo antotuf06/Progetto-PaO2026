@@ -26,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     headers/Appuntamento.h \
+    headers/AttivitaVisitor.h \
     headers/Impegno.h \
     headers/Manager.h \
     headers/Scadenza.h \
